@@ -1,6 +1,4 @@
-
 package com.crio.warmup.stock;
-
 
 import com.crio.warmup.stock.dto.AnnualizedReturn;
 import com.crio.warmup.stock.dto.PortfolioTrade;
@@ -30,6 +28,10 @@ import org.springframework.web.client.RestTemplate;
 
 
 public class PortfolioManagerApplication {
+
+
+
+
 
 
 

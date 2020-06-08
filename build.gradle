@@ -25,7 +25,7 @@ ext {
 }
 
 buildDir = '/tmp/external_build'
-
+    
 apply plugin: 'io.spring.dependency-management'
 apply plugin: "idea"
 apply plugin: "checkstyle"
@@ -91,6 +91,13 @@ test {
     useJUnitPlatform()
 }
 
+allprojects{
+    test {
+        testLogging.events ("STANDARD_ERROR")
+        testLogging.events ("STANDARD_OUT")
+    }
+}
+
 subprojects {
     apply plugin: "java-library"
     apply plugin: "idea"
@@ -118,6 +125,8 @@ subprojects {
         }
         useJUnitPlatform {
         }
+        testLogging.events ("STANDARD_ERROR")
+        testLogging.events ("STANDARD_OUT")
         afterSuite { desc, result ->
             if (!desc.parent) {
                 println "\nTEST RESULT: ${result.resultType}"
@@ -166,6 +175,10 @@ subprojects {
 
     build.dependsOn installGitHooks
 }
+
+
+
+
 
 task cleanupCrioJars {
     doLast {
