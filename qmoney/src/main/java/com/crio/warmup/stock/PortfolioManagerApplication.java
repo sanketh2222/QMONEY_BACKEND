@@ -1,6 +1,4 @@
-
 package com.crio.warmup.stock;
-
 
 import com.crio.warmup.stock.dto.AnnualizedReturn;
 import com.crio.warmup.stock.dto.PortfolioTrade;
@@ -35,30 +33,23 @@ public class PortfolioManagerApplication {
 
 
 
+
+
   // TODO: CRIO_TASK_MODULE_REST_API
-  //  Copy the relavent code from #mainReadFile to parse the Json into PortfolioTrade list.
-  //  Now That you have the list of PortfolioTrade already populated in module#1
-  //  For each stock symbol in the portfolio trades,
-  //  Call Tiingo api (https://api.tiingo.com/tiingo/daily/<ticker>/prices?startDate=&endDate=&token=)
-  //  with
-  //   1. ticker = symbol in portfolio_trade
-  //   2. startDate = purchaseDate in portfolio_trade.
-  //   3. endDate = args[1]
-  //  Use RestTemplate#getForObject in order to call the API,
-  //  and deserialize the results in List<Candle>
-  //  Note - You may have to register on Tiingo to get the api_token.
-  //    Please refer the the module documentation for the steps.
-  //  Find out the closing price of the stock on the end_date and
-  //  return the list of all symbols in ascending order by its close value on endDate
-  //  Test the function using gradle commands below
-  //   ./gradlew run --args="trades.json 2020-01-01"
-  //   ./gradlew run --args="trades.json 2019-07-01"
-  //   ./gradlew run --args="trades.json 2019-12-03"
-  //  And make sure that its printing correct results.
+  //  Find out the closing price of each stock on the end_date and return the list
+  //  of all symbols in ascending order by its close value on end date.
+
+  // Note:
+  // 1. You may have to register on Tiingo to get the api_token.
+  // 2. Look at args parameter and the module instructions carefully.
+  // 2. You can copy relevant code from #mainReadFile to parse the Json.
+  // 3. Use RestTemplate#getForObject in order to call the API,
+  //    and deserialize the results in List<Candle>
 
   public static List<String> mainReadQuotes(String[] args) throws IOException, URISyntaxException {
      return Collections.emptyList();
   }
+
 
 
 
