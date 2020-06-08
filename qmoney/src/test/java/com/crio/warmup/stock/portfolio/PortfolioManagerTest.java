@@ -81,7 +81,6 @@ class PortfolioManagerTest {
       throws Exception {
     //given
     String moduleToRun = null;
-    moduleToRun = "REFACTOR";
 
 
     if (moduleToRun.equals("REFACTOR")) {

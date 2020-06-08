@@ -1,6 +1,4 @@
-
 package com.crio.warmup.stock;
-
 
 import com.crio.warmup.stock.dto.AnnualizedReturn;
 import com.crio.warmup.stock.dto.PortfolioTrade;
@@ -44,19 +42,17 @@ public class PortfolioManagerApplication {
 
 
 
+
+
+
   // TODO: CRIO_TASK_MODULE_REFACTOR
   //  Once you are done with the implementation inside PortfolioManagerImpl and
-  //  PortfolioManagerFactory,
-  //  Create PortfolioManager using PortfoliomanagerFactory,
+  //  PortfolioManagerFactory, create PortfolioManager using PortfolioManagerFactory.
   //  Refer to the code from previous modules to get the List<PortfolioTrades> and endDate, and
   //  call the newly implemented method in PortfolioManager to calculate the annualized returns.
-  //  Test the same using the same commands as you used in module 3
-  //  use gralde command like below to test your code
-  //  ./gradlew run --args="trades.json 2020-01-01"
-  //  ./gradlew run --args="trades.json 2019-07-01"
-  //  ./gradlew run --args="trades.json 2019-12-03"
-  //  where trades.json is your json file
-  //  Confirm that you are getting same results as in Module3.
+
+  // Note:
+  // Remember to confirm that you are getting same results for annualized returns as in Module 3.
 
   public static List<AnnualizedReturn> mainCalculateReturnsAfterRefactor(String[] args)
       throws Exception {
