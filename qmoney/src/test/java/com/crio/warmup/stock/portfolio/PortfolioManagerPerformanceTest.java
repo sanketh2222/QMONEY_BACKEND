@@ -88,9 +88,7 @@ class PortfolioManagerPerformanceTest {
   private void runConcurrencyTest(boolean withException)
       throws JsonProcessingException, StockQuoteServiceException, InterruptedException {
     String moduleToRun = null;
-    moduleToRun = "REFACTOR";
 
-    moduleToRun = "ADDITIONAL_REFACTOR";
 
     if (moduleToRun.equals("REFACTOR")) {
       Mockito.doReturn(getCandles(aaplQuotes, false)).when(portfolioManager)
