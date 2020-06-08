@@ -1,6 +1,4 @@
-
 package com.crio.warmup.stock;
-
 
 import com.crio.warmup.stock.dto.AnnualizedReturn;
 import com.crio.warmup.stock.dto.PortfolioTrade;
@@ -30,18 +28,14 @@ import org.springframework.web.client.RestTemplate;
 public class PortfolioManagerApplication {
 
   // TODO: CRIO_TASK_MODULE_JSON_PARSING
-  //  Read the json file provided in the argument[0]. The file will be avilable in the classpath.
-  //  1. Use #resolveFileFromResources to get actual file from classpath.
-  //  2. parse the json file using ObjectMapper provided with #getObjectMapper,
-  //  and extract symbols provided in every trade.
-  //  return the list of all symbols in the same order as provided in json.
-  //  Test the function using gradle commands below
-  //   ./gradlew run --args="trades.json"
-  //  Make sure that it prints below String on the console -
-  //  ["AAPL","MSFT","GOOGL"]
-  //  Now, run
-  //  ./gradlew build and make sure that the build passes successfully
-  //  There can be few unused imports, you will need to fix them to make the build pass.
+  //  Read the json file provided in the argument[0]. The file will be available in the classpath.
+  //    1. Use #resolveFileFromResources to get actual file from classpath.
+  //    2. Extract stock symbols from the json file with ObjectMapper provided by #getObjectMapper.
+  //    3. Return the list of all symbols in the same order as provided in json.
+
+  //  Note:
+  //  1. There can be few unused imports, you will need to fix them to make the build pass.
+  //  2. You can use "./gradlew build" to check if your code builds successfully.
 
   public static List<String> mainReadFile(String[] args) throws IOException, URISyntaxException {
 
@@ -49,9 +43,20 @@ public class PortfolioManagerApplication {
   }
 
 
+  // Note:
+  // 1. You may need to copy relevant code from #mainReadQuotes to parse the Json.
+  // 2. Remember to get the latest quotes from Tiingo API.
 
 
 
+
+
+  // Note:
+  // 1. You may have to register on Tiingo to get the api_token.
+  // 2. Look at args parameter and the module instructions carefully.
+  // 2. You can copy relevant code from #mainReadFile to parse the Json.
+  // 3. Use RestTemplate#getForObject in order to call the API,
+  //    and deserialize the results in List<Candle>
 
 
 
@@ -115,6 +120,9 @@ public class PortfolioManagerApplication {
         lineNumberFromTestFileInStackTrace});
   }
 
+
+  // Note:
+  // Remember to confirm that you are getting same results for annualized returns as in Module 3.
 
 
 
