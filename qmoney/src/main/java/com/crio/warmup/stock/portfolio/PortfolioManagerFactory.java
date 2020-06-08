@@ -7,19 +7,19 @@ import org.springframework.web.client.RestTemplate;
 
 public class PortfolioManagerFactory {
 
+
   public static PortfolioManager getPortfolioManager(RestTemplate restTemplate) {
 
   }
 
   // TODO: CRIO_TASK_MODULE_ADDITIONAL_REFACTOR
-  //  Implement the method in such a way that it will return new Instance of PortfolioManager
-  //  using RestTemplate and provider name.
-  //  As a first step, Create appropriate instance of StoockQuoteService using
-  //  StockQuoteServiceFactory and then use the same instance of StockQuoteService to create the
-  //  instance of PortfolioManager.
-  //  Mark the earlier constructor of PortfolioManager as @Deprecated.
-  //  Test your changes using gradle command and make sur all of the tests pass.
-  //  ./gradlew test --tests PortfolioManagerFactory
+  //  Implement the method to return new instance of PortfolioManager.
+  //  Steps:
+  //    1. Create appropriate instance of StoockQuoteService using StockQuoteServiceFactory and then
+  //       use the same instance of StockQuoteService to create the instance of PortfolioManager.
+  //    2. Mark the earlier constructor of PortfolioManager as @Deprecated.
+  //    3. Make sure all of the tests pass by using the gradle command below:
+  //       ./gradlew test --tests PortfolioManagerFactory
 
 
    public static PortfolioManager getPortfolioManager(String provider,

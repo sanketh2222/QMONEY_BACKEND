@@ -56,6 +56,8 @@ class AlphavantageServiceTest {
       + "\"156.4800\",\"4. close\": \"157.7400\",\"5. adjusted close\": \"155.3979\",\"6. volume\":"
       + " \"35003466\",\"7. dividend amount\": \"0.0000\",\"8. split coefficient\": \"1.0000\"}}}";
 
+
+
   @Test
   @MockitoSettings(strictness = Strictness.LENIENT)
   void getStockQuoteSingle() throws Exception {
@@ -87,5 +89,7 @@ class AlphavantageServiceTest {
     assertTrue(!propertyKeyValues.isEmpty() || !propertyKeyValues2.isEmpty() || !propertyKeyValues3
         .isEmpty());
   }
+
+
 }
 

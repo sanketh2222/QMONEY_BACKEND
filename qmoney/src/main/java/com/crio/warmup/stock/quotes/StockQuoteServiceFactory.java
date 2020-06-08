@@ -5,10 +5,10 @@ import org.springframework.web.client.RestTemplate;
 
 public enum StockQuoteServiceFactory {
 
-  // TODO: CRIO_TASK_MODULE_ADDITIONAL_REFACTOR
-  //  Its only read task - understand what we are doing before we use them.
-  //  Pro's and Con's of implementing singleton via enum -
-  //  https://softwareengineering.stackexchange.com/q/179386/253205
+  // Note: (Recommended reading)
+  // Pros and cons of implementing Singleton via enum.
+  // https://softwareengineering.stackexchange.com/q/179386/253205
+
   INSTANCE;
 
   // TODO: CRIO_TASK_MODULE_ADDITIONAL_REFACTOR
