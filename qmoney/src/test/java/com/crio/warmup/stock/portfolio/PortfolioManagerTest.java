@@ -1,4 +1,3 @@
-
 package com.crio.warmup.stock.portfolio;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -83,7 +82,7 @@ class PortfolioManagerTest {
   public void calculateExtrapolatedAnnualizedReturn()
       throws Exception {
     //given
-    String moduleToRun = null;
+    String moduleToRun = "ADDITIONAL_REFACTOR";
 
 
     if (moduleToRun.equals("REFACTOR")) {
