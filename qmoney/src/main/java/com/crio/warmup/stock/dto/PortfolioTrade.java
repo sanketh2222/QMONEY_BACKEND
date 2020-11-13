@@ -1,8 +1,13 @@
 
 package com.crio.warmup.stock.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.time.LocalDate;
 
+
+
+@JsonIgnoreProperties({"purchaseDate"})
 public class PortfolioTrade {
 
   public PortfolioTrade() {  }

@@ -1,8 +1,8 @@
 
 package com.crio.warmup.stock;
+// package com.crio.warmup.stock.dto;
 
-
-import com.crio.warmup.stock.dto.AnnualizedReturn;
+// import com.crio.warmup.stock.dto.AnnualizedReturn;
 import com.crio.warmup.stock.dto.PortfolioTrade;
 import com.crio.warmup.stock.log.UncaughtExceptionHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,21 +10,22 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
+// import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+// import java.time.LocalDate;
+// import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
+// import java.util.Collections;
+// import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
+// import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+// import java.util.stream.Collectors;
+// import java.util.stream.Stream;
 import org.apache.logging.log4j.ThreadContext;
-import org.springframework.web.client.RestTemplate;
+// import org.springframework.web.client.RestTemplate;
 
 
 public class PortfolioManagerApplication {
@@ -41,7 +42,31 @@ public class PortfolioManagerApplication {
 
   public static List<String> mainReadFile(String[] args) throws IOException, URISyntaxException {
 
-     return Collections.emptyList();
+    File ifile = resolveFileFromResources(args[0]);
+    ObjectMapper objectMapper = new ObjectMapper();
+    //  ObjectMapper obj = getObjectMapper();
+    
+    //  obj.get
+    //  getObjectMapper()
+    //  List<String> symbols= List<String>;
+    // List symbol = new ArrayList();
+    List<String> symbol = new ArrayList<>();
+    //  ArrayList<String> gfg = new ArrayList<String>(); 
+    
+
+    PortfolioTrade[] trades = objectMapper.readValue(ifile, PortfolioTrade[].class);
+    //  trades.getObjectMapper();
+    // getObjectMapper(trades);
+    
+    for (PortfolioTrade trade:trades) {
+      symbol.add(trade.getSymbol());
+    }
+
+    
+
+    //  return Collections.emptyList();
+    return symbol;
+
   }
 
 
@@ -110,11 +135,12 @@ public class PortfolioManagerApplication {
 
   public static List<String> debugOutputs() {
 
-     String valueOfArgument0 = "trades.json";
-     String resultOfResolveFilePathArgs0 = "";
-     String toStringOfObjectMapper = "";
-     String functionNameFromTestFileInStackTrace = "";
-     String lineNumberFromTestFileInStackTrace = "";
+    String valueOfArgument0 = "trades.json";
+    String resultOfResolveFilePathArgs0 = "/home/crio-user/workspace/sankeths94-"
+        + "ME_QMONEY/qmoney/bin/main/trades.json";
+    String toStringOfObjectMapper = "";
+    String functionNameFromTestFileInStackTrace = "";
+    String lineNumberFromTestFileInStackTrace = "";
 
 
     return Arrays.asList(new String[]{valueOfArgument0, resultOfResolveFilePathArgs0,
@@ -133,6 +159,9 @@ public class PortfolioManagerApplication {
     ThreadContext.put("runId", UUID.randomUUID().toString());
 
     printJsonObject(mainReadFile(args));
+    // List<String> responses = PortfolioManagerApplication.debugOutputs();
+    // // Assertions.assertTrue(responses.get(0).contains("trades.json"));
+    // System.out.println("val is"+responses.get(0));
 
 
 

@@ -1,11 +1,11 @@
 
 package com.crio.warmup.stock;
 
-import com.crio.warmup.stock.dto.PortfolioTrade;
-import java.time.LocalDate;
+// import com.crio.warmup.stock.dto.PortfolioTrade;
+// import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+// import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +33,7 @@ class PortfolioManagerApplicationTest {
   public void testDebugValues() {
     List<String> responses = PortfolioManagerApplication.debugOutputs();
     Assertions.assertTrue(responses.get(0).contains("trades.json"));
+    // System.out.println("val is"+responses.get(0));
   }
-
 }
 
