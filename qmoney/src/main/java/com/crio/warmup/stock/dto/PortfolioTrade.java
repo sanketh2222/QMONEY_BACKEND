@@ -1,13 +1,9 @@
 
 package com.crio.warmup.stock.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import java.time.LocalDate;
 
 
 
-@JsonIgnoreProperties({"purchaseDate"})
 public class PortfolioTrade {
 
   public PortfolioTrade() {  }
@@ -20,9 +16,9 @@ public class PortfolioTrade {
   private String symbol;
   private int quantity;
   private TradeType tradeType;
-  private LocalDate purchaseDate;
+  private String purchaseDate;
 
-  public PortfolioTrade(String symbol, int quantity, LocalDate purchaseDate) {
+  public PortfolioTrade(String symbol, int quantity, String purchaseDate) {
     this.symbol = symbol;
     this.quantity = quantity;
     this.purchaseDate = purchaseDate;
@@ -41,7 +37,7 @@ public class PortfolioTrade {
     this.tradeType = tradeType;
   }
 
-  public void setPurchaseDate(LocalDate purchaseDate) {
+  public void setPurchaseDate(String purchaseDate) {
     this.purchaseDate = purchaseDate;
   }
 
@@ -54,7 +50,7 @@ public class PortfolioTrade {
     return quantity;
   }
 
-  public LocalDate getPurchaseDate() {
+  public String getPurchaseDate() {
     return purchaseDate;
   }
 

@@ -1,34 +1,67 @@
 
 package com.crio.warmup.stock;
-// package com.crio.warmup.stock.dto;
 
-// import com.crio.warmup.stock.dto.AnnualizedReturn;
 import com.crio.warmup.stock.dto.PortfolioTrade;
+
+import com.crio.warmup.stock.dto.TiingoCandle;
+
 import com.crio.warmup.stock.log.UncaughtExceptionHandler;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import java.io.File;
+
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
-// import java.nio.file.Files;
 import java.nio.file.Paths;
-// import java.time.LocalDate;
-// import java.time.temporal.ChronoUnit;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-// import java.util.Collections;
-// import java.util.Comparator;
+import java.util.HashMap;
+
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.UUID;
-// import java.util.logging.Level;
+
 import java.util.logging.Logger;
-// import java.util.stream.Collectors;
-// import java.util.stream.Stream;
+
 import org.apache.logging.log4j.ThreadContext;
-// import org.springframework.web.client.RestTemplate;
+
+import org.springframework.web.client.RestTemplate;
+
 
 
 public class PortfolioManagerApplication {
+
+  private static  Map<Double, String> stocks = new HashMap<>();
+  // static  List<String> finalstocks = new ArrayList<>();
+
+  private static  List<String> sortByKey() {
+
+    List<String> finalstocks = new ArrayList<>();
+    finalstocks.clear();
+    System.out.print(finalstocks);
+    System.out.print(stocks);
+    System.out.print("final stock before returning and clearing before loop" + finalstocks);
+    System.out.print(" stock before returning and clearing before loop" + stocks);
+    TreeMap<Double,String> tm = new TreeMap<>();
+    tm.putAll(stocks);
+    for (Map.Entry<Double,String> entry:tm.entrySet()) {
+
+      // System.out.println(entry.getValue());
+      finalstocks.add(entry.getValue());
+
+    }
+    tm.clear();
+    stocks.clear();
+    System.out.print("final stock before returning and clearing after loop" + finalstocks);
+    System.out.print(" stock before returning and clearing before loop" + stocks);
+    return finalstocks;
+  }
 
   // TODO: CRIO_TASK_MODULE_JSON_PARSING
   //  Read the json file provided in the argument[0]. The file will be available in the classpath.
@@ -40,11 +73,15 @@ public class PortfolioManagerApplication {
   //  1. There can be few unused imports, you will need to fix them to make the build pass.
   //  2. You can use "./gradlew build" to check if your code builds successfully.
 
-  public static List<String> mainReadFile(String[] args) throws IOException, URISyntaxException {
+  public static List<String> mainReadFile(String[] args) 
+      throws IOException, URISyntaxException, Exception {
 
+    
     File ifile = resolveFileFromResources(args[0]);
     ObjectMapper objectMapper = new ObjectMapper();
+    
     //  ObjectMapper obj = getObjectMapper();
+   
     
     //  obj.get
     //  getObjectMapper()
@@ -52,6 +89,7 @@ public class PortfolioManagerApplication {
     // List symbol = new ArrayList();
     List<String> symbol = new ArrayList<>();
     //  ArrayList<String> gfg = new ArrayList<String>(); 
+    // objectMapper.read
     
 
     PortfolioTrade[] trades = objectMapper.readValue(ifile, PortfolioTrade[].class);
@@ -77,13 +115,65 @@ public class PortfolioManagerApplication {
 
 
 
+  // TODO: CRIO_TASK_MODULE_REST_API
+  //  Find out the closing price of each stock on the end_date and return the list
+  //  of all symbols in ascending order by its close value on end date.
 
   // Note:
   // 1. You may have to register on Tiingo to get the api_token.
   // 2. Look at args parameter and the module instructions carefully.
   // 2. You can copy relevant code from #mainReadFile to parse the Json.
   // 3. Use RestTemplate#getForObject in order to call the API,
-  //    and deserialize the results in List<Candle>
+  // and deserialize the results in List<Candle>
+  // Note:
+  // Remember to confirm that you are getting same results for annualized returns as in Module 3.
+  // @Serv
+  public static List<String> mainReadQuotes(String[] args) 
+      throws IOException, URISyntaxException {
+    RestTemplate rest = new RestTemplate();
+    String endDate = args[1];
+    stocks.clear();
+    
+    
+    
+    File ifile = resolveFileFromResources(args[0]);
+    ObjectMapper obj = new ObjectMapper();
+    PortfolioTrade[] trades = obj.readValue(ifile, PortfolioTrade[].class);
+    for (PortfolioTrade trd:trades) {
+
+      String url = "https://api.tiingo.com/tiingo/daily/" + trd.getSymbol()
+          + "/prices?startDate=" + trd.getPurchaseDate() + "&endDate=" 
+          + endDate + "&token=0175e650eb18193394fdc2c225b0c0ba954fa0a4";
+      URI uri = new URI(url);
+      List<Double> close = new ArrayList<>();
+      
+      
+      TiingoCandle[] emps = rest.getForObject(uri, TiingoCandle[].class);
+      
+      if (emps != null) {
+        for (TiingoCandle c:emps) {
+        
+          close.add(c.getClose());
+        
+        }
+      } else {
+        System.out.print("invalid");
+      }
+      
+      Double cprice = close.get(close.size() - 1);
+      System.out.print(cprice);//
+      
+      
+      stocks.put(cprice, trd.getSymbol());
+      //  TotalReturnsDto ret = new TotalReturnsDto(trd.getSymbol(),cprice);
+       
+    }
+
+    return sortByKey();
+    // System.out.print("the value of ");
+    
+    // return finalstocks;
+  }
 
 
 
@@ -149,20 +239,27 @@ public class PortfolioManagerApplication {
   }
 
 
-  // Note:
-  // Remember to confirm that you are getting same results for annualized returns as in Module 3.
+ 
+
+
+
+
+
+
+
 
 
 
   public static void main(String[] args) throws Exception {
     Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler());
     ThreadContext.put("runId", UUID.randomUUID().toString());
+    // String filename = "trades_old.json";
+    // List<String> actual = PortfolioManagerApplication
+    //     .mainReadQuotes(new String[]{filename, "2019-12-12"});
+    // System.out.print(actual);
+    
 
-    printJsonObject(mainReadFile(args));
-    // List<String> responses = PortfolioManagerApplication.debugOutputs();
-    // // Assertions.assertTrue(responses.get(0).contains("trades.json"));
-    // System.out.println("val is"+responses.get(0));
-
+  
 
 
   }

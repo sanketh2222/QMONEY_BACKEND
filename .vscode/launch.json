@@ -3,6 +3,20 @@
   "configurations": [
     {
       "type": "java",
+      "name": "CodeLens (Launch) - ModuleTwoTest",
+      "request": "launch",
+      "mainClass": "com.crio.warmup.stock.ModuleTwoTest",
+      "projectName": "qmoney"
+    },
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - PortfolioManagerApplication",
+      "request": "launch",
+      "mainClass": "com.crio.warmup.stock.PortfolioManagerApplication",
+      "projectName": "qmoney"
+    },
+    {
+      "type": "java",
       "name": "CodeLens (Launch) - PortfolioManagerApplicationTest",
       "request": "launch",
       "mainClass": "com.crio.warmup.stock.PortfolioManagerApplicationTest",
