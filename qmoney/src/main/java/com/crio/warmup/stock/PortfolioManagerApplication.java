@@ -6,13 +6,14 @@ import com.crio.warmup.stock.dto.PortfolioTrade;
 import com.crio.warmup.stock.dto.TiingoCandle;
 
 import com.crio.warmup.stock.log.UncaughtExceptionHandler;
-
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.File;
-
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -30,27 +31,27 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.apache.logging.log4j.ThreadContext;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-
-
 
 public class PortfolioManagerApplication {
 
-  private static  Map<Double, String> stocks = new HashMap<>();
-  // static  List<String> finalstocks = new ArrayList<>();
+  private static Map<Double, String> stocks = new HashMap<>();
+  // static List<String> finalstocks = new ArrayList<>();
 
-  private static  List<String> sortByKey() {
+  private static List<String> sortByKey() {
 
     List<String> finalstocks = new ArrayList<>();
     finalstocks.clear();
     System.out.print(finalstocks);
     System.out.print(stocks);
-    System.out.print("final stock before returning and clearing before loop" + finalstocks);
-    System.out.print(" stock before returning and clearing before loop" + stocks);
-    TreeMap<Double,String> tm = new TreeMap<>();
+    // System.out.print("final stock before returning and clearing before loop" +
+    // finalstocks);
+    // System.out.print(" stock before returning and clearing before loop" +
+    // stocks);
+    TreeMap<Double, String> tm = new TreeMap<>();
     tm.putAll(stocks);
-    for (Map.Entry<Double,String> entry:tm.entrySet()) {
+    for (Map.Entry<Double, String> entry : tm.entrySet()) {
 
       // System.out.println(entry.getValue());
       finalstocks.add(entry.getValue());
@@ -58,11 +59,17 @@ public class PortfolioManagerApplication {
     }
     tm.clear();
     stocks.clear();
-    System.out.print("final stock before returning and clearing after loop" + finalstocks);
-    System.out.print(" stock before returning and clearing before loop" + stocks);
+    // System.out.print("final stock before returning and clearing after loop" +
+    // finalstocks);
+    // System.out.print(" stock before returning and clearing before loop" +
+    // stocks);
     return finalstocks;
   }
+  
 
+  //implementation with getForEntity
+ 
+ 
   // TODO: CRIO_TASK_MODULE_JSON_PARSING
   //  Read the json file provided in the argument[0]. The file will be available in the classpath.
   //    1. Use #resolveFileFromResources to get actual file from classpath.
@@ -102,6 +109,8 @@ public class PortfolioManagerApplication {
 
     
 
+    
+
     //  return Collections.emptyList();
     return symbol;
 
@@ -128,6 +137,8 @@ public class PortfolioManagerApplication {
   // Note:
   // Remember to confirm that you are getting same results for annualized returns as in Module 3.
   // @Serv
+
+  //implementation with getForObject
   public static List<String> mainReadQuotes(String[] args) 
       throws IOException, URISyntaxException {
     RestTemplate rest = new RestTemplate();
@@ -141,14 +152,26 @@ public class PortfolioManagerApplication {
     PortfolioTrade[] trades = obj.readValue(ifile, PortfolioTrade[].class);
     for (PortfolioTrade trd:trades) {
 
+      // String url = "https://api.tiingo.com/tiingo/daily/" + trd.getSymbol()
+      //     + "/prices?startDate=" + trd.getPurchaseDate() + "&endDate=" 
+      //     + endDate + "&token=0175e650eb18193394fdc2c225b0c0ba954fa0a4";
       String url = "https://api.tiingo.com/tiingo/daily/" + trd.getSymbol()
-          + "/prices?startDate=" + trd.getPurchaseDate() + "&endDate=" 
-          + endDate + "&token=0175e650eb18193394fdc2c225b0c0ba954fa0a4";
-      URI uri = new URI(url);
+          + "/prices?startDate=" + trd.getPurchaseDate() + "&endDate={endDate}"
+          + "&token=0175e650eb18193394fdc2c225b0c0ba954fa0a4";
+      // URI uri = new URI(url);
       List<Double> close = new ArrayList<>();
       
       
-      TiingoCandle[] emps = rest.getForObject(uri, TiingoCandle[].class);
+      // TiingoCandle[] emps = rest.getForObject(uri, TiingoCandle[].class);
+      // ResponseEntity<TiingoCandle[]> emps=rest.getForEntity(url, TiingoCandle[].class, endDate);
+      TiingoCandle[] emps = rest.getForObject(url, TiingoCandle[].class, endDate);//pojo
+      // String value = rest.getForObject(url, String.class, endDate);
+      // File f=new File("treeres.json");
+      // obj.defaultPrettyPrintingWriter()
+      // obj.writerWithDefaultPrettyPrinter().writeValueAsString(value);
+      // FileWriter myWriter = new FileWriter("treeres.json");
+      // myWriter.write(obj.writerWithDefaultPrettyPrinter().writeValueAsString(value));
+      
       
       if (emps != null) {
         for (TiingoCandle c:emps) {
@@ -257,6 +280,7 @@ public class PortfolioManagerApplication {
     // List<String> actual = PortfolioManagerApplication
     //     .mainReadQuotes(new String[]{filename, "2019-12-12"});
     // System.out.print(actual);
+    // restFuncEntity("trades.json");
     
 
   
