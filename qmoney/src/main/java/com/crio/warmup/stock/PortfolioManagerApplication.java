@@ -1,26 +1,29 @@
 
 package com.crio.warmup.stock;
 
+import com.crio.warmup.stock.dto.AnnualizedReturn;
 import com.crio.warmup.stock.dto.PortfolioTrade;
 
 import com.crio.warmup.stock.dto.TiingoCandle;
 
 import com.crio.warmup.stock.log.UncaughtExceptionHandler;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
+// import com.fasterxml.jackson.core.JsonParseException;
+// import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.File;
-import java.io.FileWriter;
+// import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URI;
+import java.lang.Math;
+// import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
-
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 import java.util.List;
@@ -29,15 +32,24 @@ import java.util.TreeMap;
 import java.util.UUID;
 
 import java.util.logging.Logger;
+import java.time.temporal.ChronoUnit;
 
+import org.apache.commons.math3.analysis.function.Pow;
 import org.apache.logging.log4j.ThreadContext;
-import org.springframework.http.ResponseEntity;
+// import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 public class PortfolioManagerApplication {
 
   private static Map<Double, String> stocks = new HashMap<>();
   // static List<String> finalstocks = new ArrayList<>();
+
+  private static Double  dateDiffDays(String start,LocalDate end) {
+    
+    long diff=ChronoUnit.DAYS.between(LocalDate.parse(start), end);
+    Long l=new Long(diff);
+    return l.doubleValue()/365;
+  }
 
   private static List<String> sortByKey() {
 
@@ -249,10 +261,9 @@ public class PortfolioManagerApplication {
   public static List<String> debugOutputs() {
 
     String valueOfArgument0 = "trades.json";
-    String resultOfResolveFilePathArgs0 = "/home/crio-user/workspace/sankeths94-"
-        + "ME_QMONEY/qmoney/bin/main/trades.json";
-    String toStringOfObjectMapper = "";
-    String functionNameFromTestFileInStackTrace = "";
+    String resultOfResolveFilePathArgs0 = "trades.json";
+    String toStringOfObjectMapper = "ObjectMapper";
+    String functionNameFromTestFileInStackTrace = "mainReadFile";
     String lineNumberFromTestFileInStackTrace = "";
 
 
@@ -262,7 +273,87 @@ public class PortfolioManagerApplication {
   }
 
 
- 
+  
+
+  // TODO: CRIO_TASK_MODULE_CALCULATIONS
+  //  Return the populated list of AnnualizedReturn for all stocks.
+  //  Annualized returns should be calculated in two steps:
+  //   1. Calculate totalReturn = (sell_value - buy_value) / buy_value.
+  //      1.1 Store the same as totalReturns
+  //   2. Calculate extrapolated annualized returns by scaling the same in years span.
+  //      The formula is:
+  //      annualized_returns = (1 + total_returns) ^ (1 / total_num_years) - 1
+  //      2.1 Store the same as annualized_returns
+  //  Test the same using below specified command. The build should be successful.
+  //     ./gradlew test --tests PortfolioManagerApplicationTest.testCalculateAnnualizedReturn
+
+
+  //exp formula
+  public static AnnualizedReturn calculateAnnualizedReturns(LocalDate endDate,
+      PortfolioTrade trade, Double buyPrice, Double sellPrice) {
+      Double total_num_years=dateDiffDays(trade.getPurchaseDate(), endDate);
+      Double total_returns=(sellPrice-buyPrice)/buyPrice;
+      Double annualized_returns = Math.pow((1 + total_returns) ,(1 / total_num_years)) - 1;
+      return new AnnualizedReturn(trade.getSymbol(), annualized_returns, total_returns);
+      
+  }
+
+  // TODO: CRIO_TASK_MODULE_CALCULATIONS
+  //  Now that you have the list of PortfolioTrade and their data, calculate annualized returns
+  //  for the stocks provided in the Json.
+  //  Use the function you just wrote #calculateAnnualizedReturns.
+  //  Return the list of AnnualizedReturns sorted by annualizedReturns in descending order.
+
+  // Note:
+  // 1. You may need to copy relevant code from #mainReadQuotes to parse the Json.
+  // 2. Remember to get the latest quotes from Tiingo API.
+
+  public static List<AnnualizedReturn> mainCalculateSingleReturn(String[] args)
+      throws IOException, URISyntaxException {
+        
+     List<AnnualizedReturn> trades=new ArrayList<>();
+     List<Double> openprices=new ArrayList<>();
+     List<Double> closeprices=new ArrayList<>();
+     ObjectMapper obj=new ObjectMapper();
+     RestTemplate rst=new RestTemplate();
+     PortfolioTrade[] trds = obj.readValue(resolveFileFromResources(args[0]), PortfolioTrade[].class);
+     for (PortfolioTrade trd: trds) {
+        String url = "https://api.tiingo.com/tiingo/daily/" + trd.getSymbol()
+        + "/prices?startDate=" + trd.getPurchaseDate() + "&endDate="+args[1]
+        + "&token=0175e650eb18193394fdc2c225b0c0ba954fa0a4";
+
+        // PortfolioTrade[] tds=rst.getForObject(url, PortfolioTrade[].class);
+        TiingoCandle[] tds=rst.getForObject(url, TiingoCandle[].class);
+        for (TiingoCandle t: tds) {
+          openprices.add(t.getOpen());
+          closeprices.add(t.getClose());
+        }
+        Double buyPrice=openprices.get(0);
+        Double sellPrice=closeprices.get(closeprices.size()-1);
+        
+        AnnualizedReturn aReturn = calculateAnnualizedReturns(LocalDate.parse(args[1]), trd, buyPrice, sellPrice);
+        trades.add(aReturn);
+        System.out.println(trades);
+        openprices.clear();
+        closeprices.clear();
+        // AnnualizedReturn aReturn=new AnnualizedReturn(trd.getSymbol(), annualizedReturn, totalReturns)
+        //calculateAnnualizedReturns(endDate, trade, buyPrice, sellPrice)
+        
+        
+        //calculateAnnualizedReturns(endDate, trade, buyPrice, sellPrice)
+        // AnnualizedReturn aReturns=rst.getForObject(url, AnnualizedReturn.class);
+        
+        // trades.add(aReturns);
+        // Double 
+     }
+    //  System.out.println(trades);
+    
+     return trades;
+    //  return Collections.emptyList();
+  }
+
+
+
 
 
 
@@ -285,6 +376,11 @@ public class PortfolioManagerApplication {
 
   
 
+
+
+
+
+    // printJsonObject(mainCalculateSingleReturn(args));
 
   }
 }
