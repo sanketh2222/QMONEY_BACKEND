@@ -71,7 +71,8 @@ class PortfolioManagerApplicationTest {
 
   @Test
   public void testCalculateAnnualizedReturnGoogl() {
-    PortfolioTrade trade = new PortfolioTrade("GOOGL", 50, LocalDate.parse("2019-01-02").toString());
+    PortfolioTrade trade = new PortfolioTrade("GOOGL", 50,
+        LocalDate.parse("2019-01-02").toString());
     AnnualizedReturn returns = PortfolioManagerApplication
         .calculateAnnualizedReturns(LocalDate.parse("2019-12-12"),
         trade, 1054.00, 1348.00);
