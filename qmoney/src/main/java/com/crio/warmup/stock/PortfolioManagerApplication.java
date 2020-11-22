@@ -20,6 +20,9 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +35,21 @@ import org.apache.logging.log4j.ThreadContext;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.client.RestTemplate;
+
+// class AnualSort implements Comparator<AnnualizedReturn> {
+
+//   @Override
+//   public int compare(AnnualizedReturn a1, AnnualizedReturn a2) {
+
+//     // TODO Auto-generated method stub
+//     if (a1.getAnnualizedReturn() > a2.getAnnualizedReturn()) {
+//       return -1;
+//     } else {
+//       return 1;
+//     }
+//   }
+  
+// }
 
 public class PortfolioManagerApplication {
 
@@ -233,12 +251,7 @@ public class PortfolioManagerApplication {
     Double returns = (sellPrice - buyPrice) / buyPrice;
     Double annualized = Math.pow((1 + returns), (1 / years)) - 1;
     
-    // AnnualizedReturn ret = new AnnualizedReturn(trade.getSymbol(), annualized, returns);
-    // if (trade != null) {
-    //   return new AnnualizedReturn(trade.getSymbol(), annualized, returns);
-    // } else {
-    //   return null;
-    // }
+        
     return new AnnualizedReturn(trade.getSymbol(), annualized, returns);
     
       
@@ -290,25 +303,33 @@ public class PortfolioManagerApplication {
         System.out.println(trades);
         openprices.clear();
         closeprices.clear();
-        System.out.println("length of args is " + args.length);
-        System.out.println("parm1 is " + args[0]);
-        System.out.println("parm1 is " + args[1]);
+        // System.out.println("length of args is " + args.length);
+        // System.out.println("parm1 is " + args[0]);
+        // System.out.println("parm1 is " + args[1]);
       }
         
         
     }
    
-    System.out.println("for trade " + trades.get(0).getSymbol() 
-        + " ans is " + trades.get(0).getAnnualizedReturn() + " tr is " 
-        + trades.get(0).getTotalReturns());
+    // System.out.println("for trade " + trades.get(0).getSymbol() 
+    //     + " ans is " + trades.get(0).getAnnualizedReturn() + " tr is " 
+    //     + trades.get(0).getTotalReturns());
 
-    System.out.println("for trade " + trades.get(1).getSymbol() 
-        + " ans is " + trades.get(1).getAnnualizedReturn() + " tr is " 
-        + trades.get(1).getTotalReturns());
+    // System.out.println("for trade " + trades.get(1).getSymbol() 
+    //     + " ans is " + trades.get(1).getAnnualizedReturn() + " tr is " 
+    //     + trades.get(1).getTotalReturns());
 
-    System.out.println("for trade " + trades.get(2).getSymbol() 
-        + " ans is " + trades.get(2).getAnnualizedReturn() + " tr is " 
-        + trades.get(2).getTotalReturns());
+    // System.out.println("for trade " + trades.get(2).getSymbol() 
+    //     + " ans is " + trades.get(2).getAnnualizedReturn() + " tr is " 
+    //     + trades.get(2).getTotalReturns());
+    // Collections.sort(trades,AnualSort<trades>);
+    // Collections.sort(trades, new Comparator<T>() {
+
+    // };
+    System.out.println(trades);
+    Comparator<AnnualizedReturn> c = new AnualSort();
+    Collections.sort(trades,c);
+    System.out.println(trades);
 
     return trades;
     
@@ -410,6 +431,8 @@ public class PortfolioManagerApplication {
 
 
     // printJsonObject(mainCalculateSingleReturn(args));
+
+
 
   }
 }
