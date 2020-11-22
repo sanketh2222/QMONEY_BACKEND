@@ -1,9 +1,14 @@
-
 package com.crio.warmup.stock.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+
+import java.time.LocalDate;
 
 
-// import java.time.LocalDate;
 
 public class PortfolioTrade {
 
@@ -17,14 +22,19 @@ public class PortfolioTrade {
   private String symbol;
   private int quantity;
   private TradeType tradeType;
-  private String purchaseDate;
 
-  public PortfolioTrade(String symbol, int quantity, String purchaseDate) {
+  @JsonDeserialize(using = LocalDateDeserializer.class)
+  @JsonSerialize(using = LocalDateSerializer.class)
+  private LocalDate purchaseDate;
+
+  public PortfolioTrade(String symbol, int quantity, LocalDate purchaseDate) {
     this.symbol = symbol;
     this.quantity = quantity;
     this.purchaseDate = purchaseDate;
     this.tradeType = TradeType.BUY;
   }
+
+ 
 
   public void setSymbol(String symbol) {
     this.symbol = symbol;
@@ -38,7 +48,7 @@ public class PortfolioTrade {
     this.tradeType = tradeType;
   }
 
-  public void setPurchaseDate(String purchaseDate) {
+  public void setPurchaseDate(LocalDate purchaseDate) {
     this.purchaseDate = purchaseDate;
   }
 
@@ -51,7 +61,7 @@ public class PortfolioTrade {
     return quantity;
   }
 
-  public String getPurchaseDate() {
+  public LocalDate getPurchaseDate() {
     return purchaseDate;
   }
 
@@ -59,5 +69,26 @@ public class PortfolioTrade {
     return tradeType;
   }
   //solution
+
+  @Override
+  public String toString() {
+    return "PortfolioTrade [purchaseDate=" + purchaseDate + ", quantity="
+        + quantity + ", symbol=" + symbol
+        + ", tradeType=" + tradeType + "]";
+  }
+
+
+  public static void main(String[] args) {
+
+    // PortfolioTrade tr1=new PortfolioTrade("AAPL",100,"2020-10-13");
+    // PortfolioTrade tr=new PortfolioTrade("AAPL",100,LocalDate.parse("2020-10-12"));
+   
+    // String res=tr1.toString();
+    // String res1=tr.toString();
+    // System.out.println(res);
+    // System.out.println(res1);
+    // System.out.println(tr.getPurchaseDate());
+    // System.out.println(tr1.getPurchaseDate());
+  }
 
 }

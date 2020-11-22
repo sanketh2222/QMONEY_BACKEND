@@ -154,14 +154,14 @@ public class PortfolioManagerApplication {
     
     File ifile = resolveFileFromResources(args[0]);
     ObjectMapper obj = new ObjectMapper();
-    PortfolioTrade[] trades = obj.readValue(ifile, PortfolioTrade[].class);
+    PortfolioTrade[] trades = obj.readValue(ifile, PortfolioTrade[].class);//failing here
     for (PortfolioTrade trd:trades) {
 
       // String url = "https://api.tiingo.com/tiingo/daily/" + trd.getSymbol()
       //     + "/prices?startDate=" + trd.getPurchaseDate() + "&endDate=" 
       //     + endDate + "&token=0175e650eb18193394fdc2c225b0c0ba954fa0a4";
       String url = "https://api.tiingo.com/tiingo/daily/" + trd.getSymbol()
-          + "/prices?startDate=" + trd.getPurchaseDate() + "&endDate={endDate}"
+          + "/prices?startDate=" + trd.getPurchaseDate().toString() + "&endDate={endDate}"
           + "&token=0175e650eb18193394fdc2c225b0c0ba954fa0a4";
       // URI uri = new URI(url);
       List<Double> close = new ArrayList<>();
@@ -284,7 +284,7 @@ public class PortfolioManagerApplication {
   
   public static AnnualizedReturn calculateAnnualizedReturns(LocalDate endDate,
       PortfolioTrade trade, Double buyPrice, Double sellPrice)  {
-    Double years = dateDiffDays(trade.getPurchaseDate(), endDate);
+    Double years = dateDiffDays(trade.getPurchaseDate().toString(), endDate);
     Double returns = (sellPrice - buyPrice) / buyPrice;
     Double annualized = Math.pow((1 + returns), (1 / years)) - 1;
     
@@ -321,7 +321,7 @@ public class PortfolioManagerApplication {
       PortfolioTrade[].class);
     for (PortfolioTrade trd: trds) {
       String url = "https://api.tiingo.com/tiingo/daily/" + trd.getSymbol()
-          + "/prices?startDate=" + trd.getPurchaseDate() + "&endDate=" + args[1]
+          + "/prices?startDate=" + trd.getPurchaseDate().toString() + "&endDate=" + args[1]
           + "&token=0175e650eb18193394fdc2c225b0c0ba954fa0a4";
 
       // PortfolioTrade[] tds=rst.getForObject(url, PortfolioTrade[].class);
@@ -366,11 +366,12 @@ public class PortfolioManagerApplication {
   public static void main(String[] args) throws Exception {
     Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler());
     ThreadContext.put("runId", UUID.randomUUID().toString());
-    // String filename = "trades_old.json";
-    // List<String> actual = PortfolioManagerApplication
-    //     .mainReadQuotes(new String[]{filename, "2019-12-12"});
+    // String filename = "trades.json";
+    // List<String> results = PortfolioManagerApplication
+    //     .mainReadFile(new String[]{filename});
     // System.out.print(actual);
     // restFuncEntity("trades.json");
+    printJsonObject(mainCalculateSingleReturn(args));
     
 
   

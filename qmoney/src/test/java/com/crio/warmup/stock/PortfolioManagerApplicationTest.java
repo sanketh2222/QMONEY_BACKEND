@@ -2,6 +2,7 @@
 package com.crio.warmup.stock;
 
 import com.crio.warmup.stock.dto.AnnualizedReturn;
+
 import com.crio.warmup.stock.dto.PortfolioTrade;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -25,6 +26,8 @@ class PortfolioManagerApplicationTest {
     //then
     Assertions.assertEquals(expected, results);
   }
+
+
 
 
   @Test
@@ -62,7 +65,7 @@ class PortfolioManagerApplicationTest {
 
   @Test
   public void testCalculateAnnualizedReturn() {
-    PortfolioTrade trade = new PortfolioTrade("AAPL", 50, LocalDate.parse("2015-01-01").toString());
+    PortfolioTrade trade = new PortfolioTrade("AAPL", 50, LocalDate.parse("2015-01-01"));
     AnnualizedReturn returns = PortfolioManagerApplication
         .calculateAnnualizedReturns(LocalDate.parse("2018-01-01"),
         trade, 10000.00, 11000.00);
@@ -72,7 +75,7 @@ class PortfolioManagerApplicationTest {
   @Test
   public void testCalculateAnnualizedReturnGoogl() {
     PortfolioTrade trade = new PortfolioTrade("GOOGL", 50,
-        LocalDate.parse("2019-01-02").toString());
+        LocalDate.parse("2019-01-02"));
     AnnualizedReturn returns = PortfolioManagerApplication
         .calculateAnnualizedReturns(LocalDate.parse("2019-12-12"),
         trade, 1054.00, 1348.00);
