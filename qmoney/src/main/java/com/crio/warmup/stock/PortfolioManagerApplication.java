@@ -41,8 +41,8 @@ public class PortfolioManagerApplication {
   private static Double  dateDiffDays(String start,LocalDate end) {
     
     long diff = ChronoUnit.DAYS.between(LocalDate.parse(start), end);
-    Long l = Long.valueOf(diff);
-    return l.doubleValue() / 365;
+    
+    return Long.valueOf(diff).doubleValue() / 365;
   }
 
   private static List<String> sortByKey() {
@@ -265,6 +265,7 @@ public class PortfolioManagerApplication {
     RestTemplate rst = new RestTemplate();
     PortfolioTrade[] trds = obj.readValue(resolveFileFromResources(args[0]), 
       PortfolioTrade[].class);
+    System.out.println(readFileAsString(args[0]));
     for (PortfolioTrade trd: trds) {
       String url = "https://api.tiingo.com/tiingo/daily/" + trd.getSymbol()
           + "/prices?startDate=" + trd.getPurchaseDate().toString() + "&endDate=" + args[1]
@@ -289,12 +290,26 @@ public class PortfolioManagerApplication {
         System.out.println(trades);
         openprices.clear();
         closeprices.clear();
+        System.out.println("length of args is " + args.length);
+        System.out.println("parm1 is " + args[0]);
+        System.out.println("parm1 is " + args[1]);
       }
         
         
     }
    
-    
+    System.out.println("for trade " + trades.get(0).getSymbol() 
+        + " ans is " + trades.get(0).getAnnualizedReturn() + " tr is " 
+        + trades.get(0).getTotalReturns());
+
+    System.out.println("for trade " + trades.get(1).getSymbol() 
+        + " ans is " + trades.get(1).getAnnualizedReturn() + " tr is " 
+        + trades.get(1).getTotalReturns());
+
+    System.out.println("for trade " + trades.get(2).getSymbol() 
+        + " ans is " + trades.get(2).getAnnualizedReturn() + " tr is " 
+        + trades.get(2).getTotalReturns());
+
     return trades;
     
   }
