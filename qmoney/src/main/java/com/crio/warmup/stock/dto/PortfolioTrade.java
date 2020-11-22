@@ -1,10 +1,10 @@
 package com.crio.warmup.stock.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+// import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+// import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+// import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+// import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
 import java.time.LocalDate;
 
@@ -23,8 +23,8 @@ public class PortfolioTrade {
   private int quantity;
   private TradeType tradeType;
 
-  @JsonDeserialize(using = LocalDateDeserializer.class)
-  @JsonSerialize(using = LocalDateSerializer.class)
+  // @JsonDeserialize(using = LocalDateDeserializer.class)
+  // @JsonSerialize(using = LocalDateSerializer.class)
   private LocalDate purchaseDate;
 
   public PortfolioTrade(String symbol, int quantity, LocalDate purchaseDate) {
@@ -78,17 +78,17 @@ public class PortfolioTrade {
   }
 
 
-  public static void main(String[] args) {
+  // public static void main(String[] args) {
 
-    // PortfolioTrade tr1=new PortfolioTrade("AAPL",100,"2020-10-13");
-    // PortfolioTrade tr=new PortfolioTrade("AAPL",100,LocalDate.parse("2020-10-12"));
+  //   // PortfolioTrade tr1=new PortfolioTrade("AAPL",100,"2020-10-13");
+  //   // PortfolioTrade tr=new PortfolioTrade("AAPL",100,LocalDate.parse("2020-10-12"));
    
-    // String res=tr1.toString();
-    // String res1=tr.toString();
-    // System.out.println(res);
-    // System.out.println(res1);
-    // System.out.println(tr.getPurchaseDate());
-    // System.out.println(tr1.getPurchaseDate());
-  }
+  //   // String res=tr1.toString();
+  //   // String res1=tr.toString();
+  //   // System.out.println(res);
+  //   // System.out.println(res1);
+  //   // System.out.println(tr.getPurchaseDate());
+  //   // System.out.println(tr1.getPurchaseDate());
+  // }
 
 }
