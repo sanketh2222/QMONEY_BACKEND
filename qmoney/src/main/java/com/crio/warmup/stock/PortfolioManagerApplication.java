@@ -300,7 +300,7 @@ public class PortfolioManagerApplication {
         AnnualizedReturn ar = calculateAnnualizedReturns(LocalDate.parse(args[1]), trd, 
             buyPrice, sellPrice);
         trades.add(ar);
-        System.out.println(trades);
+        // System.out.println(trades);
         openprices.clear();
         closeprices.clear();
         // System.out.println("length of args is " + args.length);
@@ -326,10 +326,10 @@ public class PortfolioManagerApplication {
     // Collections.sort(trades, new Comparator<T>() {
 
     // };
-    System.out.println(trades);
+    // System.out.println(trades);
     Comparator<AnnualizedReturn> c = new AnualSort();
     Collections.sort(trades,c);
-    System.out.println(trades);
+    // System.out.println(trades);
 
     return trades;
     
