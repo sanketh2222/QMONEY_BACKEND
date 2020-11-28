@@ -278,7 +278,7 @@ public class PortfolioManagerApplication {
     RestTemplate rst = new RestTemplate();
     PortfolioTrade[] trds = obj.readValue(resolveFileFromResources(args[0]), 
       PortfolioTrade[].class);
-    System.out.println(readFileAsString(args[0]));
+    // System.out.println(readFileAsString(args[0]));
     for (PortfolioTrade trd: trds) {
       String url = "https://api.tiingo.com/tiingo/daily/" + trd.getSymbol()
           + "/prices?startDate=" + trd.getPurchaseDate().toString() + "&endDate=" + args[1]
