@@ -59,7 +59,7 @@ public class PortfolioManagerApplication {
 
   private static Map<Double, String> stocks = new HashMap<>();
   public final static RestTemplate rst = new RestTemplate();
-  public static  PortfolioManager portfolioManager = PortfolioManagerFactory
+  public final static  PortfolioManager portfolioManager = PortfolioManagerFactory
       .getPortfolioManager(rst);
   // static List<String> finalstocks = new ArrayList<>();
   
