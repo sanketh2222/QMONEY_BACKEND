@@ -10,6 +10,7 @@ import java.time.LocalDate;
 
 
 
+
 public class PortfolioTrade {
 
   public PortfolioTrade() {  }
@@ -69,26 +70,5 @@ public class PortfolioTrade {
     return tradeType;
   }
   //solution
-
-  @Override
-  public String toString() {
-    return "PortfolioTrade [purchaseDate=" + purchaseDate + ", quantity="
-        + quantity + ", symbol=" + symbol
-        + ", tradeType=" + tradeType + "]";
-  }
-
-
-  // public static void main(String[] args) {
-
-  //   // PortfolioTrade tr1=new PortfolioTrade("AAPL",100,"2020-10-13");
-  //   // PortfolioTrade tr=new PortfolioTrade("AAPL",100,LocalDate.parse("2020-10-12"));
-   
-  //   // String res=tr1.toString();
-  //   // String res1=tr.toString();
-  //   // System.out.println(res);
-  //   // System.out.println(res1);
-  //   // System.out.println(tr.getPurchaseDate());
-  //   // System.out.println(tr1.getPurchaseDate());
-  // }
 
 }

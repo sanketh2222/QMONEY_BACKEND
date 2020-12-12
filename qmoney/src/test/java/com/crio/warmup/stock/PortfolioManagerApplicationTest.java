@@ -2,7 +2,6 @@
 package com.crio.warmup.stock;
 
 import com.crio.warmup.stock.dto.AnnualizedReturn;
-
 import com.crio.warmup.stock.dto.PortfolioTrade;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -26,8 +25,6 @@ class PortfolioManagerApplicationTest {
     //then
     Assertions.assertEquals(expected, results);
   }
-
-
 
 
   @Test
@@ -64,6 +61,25 @@ class PortfolioManagerApplicationTest {
   }
 
   @Test
+  void mainCalculateAnnualReturnRef() throws Exception {
+    //given
+    String filename = "trades.json";
+    //when
+    List<AnnualizedReturn> result = PortfolioManagerApplication
+        .mainCalculateReturnsAfterRefactor(new String[]{filename, "2019-12-12"});
+
+    //then
+    List<String> symbols = result.stream().map(AnnualizedReturn::getSymbol)
+        .collect(Collectors.toList());
+    Assertions.assertEquals(0.814, result.get(0).getAnnualizedReturn(), 0.01);
+    Assertions.assertEquals(0.584, result.get(1).getAnnualizedReturn(), 0.01);
+    Assertions.assertEquals(0.33, result.get(2).getAnnualizedReturn(),0.01);
+    Assertions.assertEquals(Arrays.asList(new String[]{"AAPL", "MSFT", "GOOGL"}), symbols);
+
+  }
+
+
+  @Test
   public void testCalculateAnnualizedReturn() {
     PortfolioTrade trade = new PortfolioTrade("AAPL", 50, LocalDate.parse("2015-01-01"));
     AnnualizedReturn returns = PortfolioManagerApplication
@@ -72,15 +88,9 @@ class PortfolioManagerApplicationTest {
     Assertions.assertEquals(returns.getAnnualizedReturn(), 0.0322, 0.0001);
   }
 
-  @Test
-  public void testCalculateAnnualizedReturnGoogl() {
-    PortfolioTrade trade = new PortfolioTrade("GOOGL", 50,
-        LocalDate.parse("2019-01-02"));
-    AnnualizedReturn returns = PortfolioManagerApplication
-        .calculateAnnualizedReturns(LocalDate.parse("2019-12-12"),
-        trade, 1054.00, 1348.00);
-    Assertions.assertEquals(returns.getAnnualizedReturn(), 0.298, 0.001);
-  }
+
+
+ 
 
   @Test
   public void testAllDebugValues() {
