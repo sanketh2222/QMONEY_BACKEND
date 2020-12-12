@@ -58,7 +58,7 @@ import org.springframework.web.client.RestTemplate;
 public class PortfolioManagerApplication {
 
   private static Map<Double, String> stocks = new HashMap<>();
-  public static RestTemplate rst = new RestTemplate();
+  public final static RestTemplate rst = new RestTemplate();
   public static  PortfolioManager portfolioManager = PortfolioManagerFactory
       .getPortfolioManager(rst);
   // static List<String> finalstocks = new ArrayList<>();
