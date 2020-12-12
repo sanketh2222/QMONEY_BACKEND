@@ -70,6 +70,9 @@ public class PortfolioManagerImpl implements PortfolioManager {
             + "startDate=$STARTDATE&endDate=$ENDDATE&token=$APIKEY";
 
     String token = "0175e650eb18193394fdc2c225b0c0ba954fa0a4";
+    if (endDate == null) {
+      throw new RuntimeException();
+    }
     String url = uriTemplate.replace("$SYMBOL", symbol)
          .replace("$STARTDATE", startDate.toString())
          .replace("$ENDDATE", endDate.toString())
@@ -86,6 +89,11 @@ public class PortfolioManagerImpl implements PortfolioManager {
 
   public List<AnnualizedReturn> calculateAnnualizedReturn(List<PortfolioTrade> trades, 
       LocalDate endDate) {
+
+
+    if (endDate == null) {
+      throw new RuntimeException();
+    }
 
     List<AnnualizedReturn> trds = new ArrayList<>();
     for (PortfolioTrade trade : trades) {
@@ -107,14 +115,17 @@ public class PortfolioManagerImpl implements PortfolioManager {
     Double sellPrice = 0.0;
     Double years = 0.0;
     RestTemplate rst = new RestTemplate();
-    String url = buildUri(trade.getSymbol(), trade.getPurchaseDate(), endDate);
-    TiingoCandle[] tds = rst.getForObject(url, TiingoCandle[].class);
-
-      
-    for (TiingoCandle t: tds) {
-      openprices.add(t.getOpen());
-      closeprices.add(t.getClose());
+    if (endDate != null) {
+      String url = buildUri(trade.getSymbol(), trade.getPurchaseDate(), endDate);
+      TiingoCandle[] tds = rst.getForObject(url, TiingoCandle[].class);
+      for (TiingoCandle t: tds) {
+        openprices.add(t.getOpen());
+        closeprices.add(t.getClose());
+      }
+    } else {
+      throw new RuntimeException();
     }
+    
       
     buyPrice = openprices.get(0);
     sellPrice = closeprices.get(closeprices.size() - 1);
