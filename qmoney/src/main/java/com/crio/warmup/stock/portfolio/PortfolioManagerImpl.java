@@ -7,6 +7,7 @@ import com.crio.warmup.stock.dto.AnnualizedReturn;
 import com.crio.warmup.stock.dto.Candle;
 import com.crio.warmup.stock.dto.PortfolioTrade;
 import com.crio.warmup.stock.dto.TiingoCandle;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 // import com.fasterxml.jackson.databind.ObjectMapper;
 // import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -54,7 +55,8 @@ public class PortfolioManagerImpl implements PortfolioManager {
     if ( from.compareTo(to) >= 0) {
           throw new RuntimeException();
     }
-    TiingoCandle[] trades = restTemplate.getForObject(url, TiingoCandle[].class);
+    RestTemplate rst = new RestTemplate();
+    TiingoCandle[] trades = rst.getForObject(url, TiingoCandle[].class);
     if (trades != null) {
       List<Candle> stocks = Arrays.asList(trades);
         return stocks;
@@ -109,34 +111,65 @@ public class PortfolioManagerImpl implements PortfolioManager {
 
 
     //RestTemplate rest = new RestTemplate(); 
-    List<Double> openprices = new ArrayList<>();
-    List<Double> closeprices = new ArrayList<>();
-    Double buyPrice = 0.0;
-    Double sellPrice = 0.0;
-    Double years = 0.0;
-    RestTemplate rst = new RestTemplate();
-    if (endDate != null) {
-      String url = buildUri(trade.getSymbol(), trade.getPurchaseDate(), endDate);
-      TiingoCandle[] tds = rst.getForObject(url, TiingoCandle[].class);
-      for (TiingoCandle t: tds) {
-        openprices.add(t.getOpen());
-        closeprices.add(t.getClose());
+    AnnualizedReturn annualizedReturn;
+    try {
+      List<Candle> stocksstartToEndDate;
+
+      stocksstartToEndDate = getStockQuote(trade.getSymbol(), trade.getPurchaseDate(), endDate);
+
+      Candle stockStartDate = stocksstartToEndDate.get(0);
+
+      Candle stockLatest = stocksstartToEndDate.get(stocksstartToEndDate.size() - 1);
+
+      if (!stockLatest.getDate().toString().equals(endDate.toString())) {
+         stockLatest = stocksstartToEndDate.get(stocksstartToEndDate.size() - 2);
       }
-    } else {
-      throw new RuntimeException();
+
+      Double buyPrice = stockStartDate.getOpen();
+      Double sellPrice = stockLatest.getClose();
+
+      Double years = 0.0;
+      years = dateDiffDays(trade.getPurchaseDate().toString(), endDate);
+      Double returns = (sellPrice - buyPrice) / buyPrice;
+      Double annualized = Math.pow((1 + returns), (1 / years)) - 1;
+
+      annualizedReturn = new AnnualizedReturn(trade.getSymbol(),annualized, returns);
+
+
+    } catch (JsonProcessingException e) {
+      annualizedReturn = new AnnualizedReturn(trade.getSymbol(),Double.NaN, Double.NaN);
     }
+    // List<Double> openprices = new ArrayList<>();
+    // List<Double> closeprices = new ArrayList<>();
+    // Double buyPrice = 0.0;
+    // Double sellPrice = 0.0;
+    // Double years = 0.0;
+    // RestTemplate rst = new RestTemplate();
+    // if (endDate != null) {
+    //   String url = buildUri(trade.getSymbol(), trade.getPurchaseDate(), endDate);
+    //   TiingoCandle[] tds = rst.getForObject(url, TiingoCandle[].class);
+    //   for (TiingoCandle t: tds) {
+    //     openprices.add(t.getOpen());
+    //     closeprices.add(t.getClose());
+    //   }
+    // } else {
+    //   throw new RuntimeException();
+    // }
+    return annualizedReturn;
     
       
-    buyPrice = openprices.get(0);
-    sellPrice = closeprices.get(closeprices.size() - 1);
-    years = dateDiffDays(trade.getPurchaseDate().toString(), endDate);
-    Double returns = (sellPrice - buyPrice) / buyPrice;
-    Double annualized = Math.pow((1 + returns), (1 / years)) - 1;
+    // buyPrice = openprices.get(0);
+    // sellPrice = closeprices.get(closeprices.size() - 1);
+    // years = dateDiffDays(trade.getPurchaseDate().toString(), endDate);
+    // Double returns = (sellPrice - buyPrice) / buyPrice;
+    // Double annualized = Math.pow((1 + returns), (1 / years)) - 1;
+    // openprices.clear();
+    // closeprices.clear();
         
        
       
       
-    return  new AnnualizedReturn(trade.getSymbol(),annualized, returns);
+    // return  new AnnualizedReturn(trade.getSymbol(),annualized, returns);
     
   }
 
