@@ -127,14 +127,15 @@ class PortfolioManagerTest {
     //given
     String moduleToRun = null;
     moduleToRun = "REFACTOR";
-    moduleToRun = "ADDITIONAL_REFACTOR";
+    // moduleToRun = "ADDITIONAL_REFACTOR";
     if (moduleToRun.equals("REFACTOR")) {
-      Mockito.doReturn(getCandles(aaplQuotes))
-          .when(portfolioManager).getStockQuote(eq("AAPL"), any(), any());
-      Mockito.doReturn(getCandles(msftQuotes))
-          .when(portfolioManager).getStockQuote(eq("MSFT"), any(), any());
-      Mockito.doReturn(getCandles(googlQuotes))
-          .when(portfolioManager).getStockQuote(eq("GOOGL"), any(), any());
+        Mockito.doReturn(getCandles(aaplQuotes))
+           .when(portfolioManager).getStockQuote(eq("AAPL"), any(), any());
+            //portfolioManager.getStockQuote(eq("AAPL"), any(), any());
+        Mockito.doReturn(getCandles(msftQuotes))
+            .when(portfolioManager).getStockQuote(eq("MSFT"), any(), any());
+        Mockito.doReturn(getCandles(googlQuotes))
+            .when(portfolioManager).getStockQuote(eq("GOOGL"), any(), any());
     }
     PortfolioTrade trade1 = new PortfolioTrade("AAPL", 50, LocalDate.parse("2019-01-02"));
     PortfolioTrade trade2 = new PortfolioTrade("GOOGL", 100, LocalDate.parse("2019-01-02"));
@@ -167,6 +168,41 @@ class PortfolioManagerTest {
     ObjectMapper mapper = new ObjectMapper();
     mapper.registerModule(new JavaTimeModule());
     return Arrays.asList(mapper.readValue(responseText, TiingoCandle[].class));
+  }
+
+  @Test
+  public void calculateAnnualizedReturnNoDataOnEndDate1()
+      throws Exception {
+    // TODO: CRIO_TASK_MODULE_REFACTOR
+    //  moduleToRun variable below is defaulted to NULL. Fix it in such a way that
+    //  the test doesnt throw NullPointerException.
+    //given
+    String moduleToRun = null;
+    moduleToRun = "REFACTOR";
+    // moduleToRun = "ADDITIONAL_REFACTOR";
+    if (moduleToRun.equals("REFACTOR")) {
+      Mockito.doReturn(getCandles(aaplQuotes))
+          .when(portfolioManager).getStockQuote(eq("AAPL"), any(), any());
+      Mockito.doReturn(getCandles(msftQuotes))
+          .when(portfolioManager).getStockQuote(eq("MSFT"), any(), any());
+      Mockito.doReturn(getCandles(googlQuotes))
+          .when(portfolioManager).getStockQuote(eq("GOOGL"), any(), any());
+    }
+    PortfolioTrade trade1 = new PortfolioTrade("AAPL", 50, LocalDate.parse("2019-01-02"));
+    PortfolioTrade trade2 = new PortfolioTrade("GOOGL", 100, LocalDate.parse("2019-01-02"));
+    PortfolioTrade trade3 = new PortfolioTrade("MSFT", 20, LocalDate.parse("2019-01-02"));
+    List<PortfolioTrade> portfolioTrades = Arrays
+        .asList(new PortfolioTrade[]{trade1, trade2, trade3});
+    //when
+    List<AnnualizedReturn> annualizedReturns = portfolioManager
+        .calculateAnnualizedReturn(portfolioTrades, LocalDate.parse("2019-12-14"));
+    //then
+    List<String> symbols = annualizedReturns.stream().map(AnnualizedReturn::getSymbol)
+        .collect(Collectors.toList());
+    Assertions.assertEquals(0.814, annualizedReturns.get(0).getAnnualizedReturn(), 0.01);
+    Assertions.assertEquals(0.584, annualizedReturns.get(1).getAnnualizedReturn(), 0.01);
+    Assertions.assertEquals(0.33, annualizedReturns.get(2).getAnnualizedReturn(),0.01);
+    Assertions.assertEquals(Arrays.asList(new String[]{"AAPL", "MSFT", "GOOGL"}), symbols);
   }
 
     // TODO: CRIO_TASK_MODULE_REFACTOR

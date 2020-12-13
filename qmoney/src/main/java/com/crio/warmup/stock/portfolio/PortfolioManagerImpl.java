@@ -121,9 +121,9 @@ public class PortfolioManagerImpl implements PortfolioManager {
 
       Candle stockLatest = stocksstartToEndDate.get(stocksstartToEndDate.size() - 1);
 
-      if (!stockLatest.getDate().toString().equals(endDate.toString())) {
-         stockLatest = stocksstartToEndDate.get(stocksstartToEndDate.size() - 2);
-      }
+      // if (!stockLatest.getDate().toString().equals(endDate.toString())) {
+      //    stockLatest = stocksstartToEndDate.get(stocksstartToEndDate.size() - 2);
+      // }
 
       Double buyPrice = stockStartDate.getOpen();
       Double sellPrice = stockLatest.getClose();
