@@ -5,7 +5,6 @@ plugins {
     id 'maven-publish'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id 'com.github.spotbugs' version '4.5.0'
-
 }
 
 ext {
@@ -22,8 +21,6 @@ apply plugin: "idea"
 apply plugin: "checkstyle"
 
 version '1.0-SNAPSHOT'
-
-compileJava.dependsOn clean
 
 sourceCompatibility = 1.8
 
@@ -136,6 +133,40 @@ subprojects {
     build.dependsOn installGitHooks
 }
 
+compileJava.dependsOn clean
 
 
+task cleanupCrioJars {
+    doLast {
+        def userHome = System.properties['user.home']
+        def mavenDir = new File(userHome, '.m2/repository/com/crio/')
+
+        if (mavenDir.exists()) {
+            delete mavenDir
+        }
+    }
+}
+
+task verifyMavenJarsCreated {
+    dependsOn cleanupCrioJars
+    dependsOn publishToMavenLocal
+    doLast {
+        def userHome = System.properties['user.home']
+        def mavenDir = new File(userHome, '.m2/repository/com/crio/warmup/annual-return/1.0.0')
+
+        if (!mavenDir.exists()) {
+            throw new Exception("maven repository directory not created")
+        }
+
+        // Then, Check if the file exists.
+        def jarFile = new File(mavenDir, 'annual-return-1.0.0.jar')
+        def pomFile = new File(mavenDir, 'annual-return-1.0.0.pom')
+
+        if (!jarFile.exists() || !pomFile.exists()) {
+            throw new Exception("maven repository directory exists, but files do not exist")
+        }
+
+        println("All Maven repository files are created and in place")
+    }
+}
 
