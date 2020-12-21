@@ -11,6 +11,9 @@ import com.crio.warmup.stock.dto.TiingoCandle;
 import com.fasterxml.jackson.core.JsonProcessingException;
 // import com.fasterxml.jackson.databind.ObjectMapper;
 // import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.crio.warmup.stock.quotes.StockQuoteServiceFactory;
+import com.crio.warmup.stock.quotes.StockQuotesService;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -35,8 +38,18 @@ public class PortfolioManagerImpl implements PortfolioManager {
 
   private RestTemplate restTemplate;
 
+  private StockQuotesService stockQuotesService;
+
+  // Caution: Do not delete or modify the constructor, or else your build will break!
+  // This is absolutely necessary for backward compatibility
   protected PortfolioManagerImpl(RestTemplate restTemplate) {
     this.restTemplate = restTemplate;
+  }
+
+  //added because of the test case issue(PortfolioManagerTest)
+  //why do we need this? method is not being used from factory
+  protected PortfolioManagerImpl(StockQuotesService stockQuotesService) {
+    this.stockQuotesService = stockQuotesService;
   }
 
   
@@ -174,5 +187,11 @@ public class PortfolioManagerImpl implements PortfolioManager {
   }
 
 
+
+  // TODO: CRIO_TASK_MODULE_ADDITIONAL_REFACTOR
+  //  Modify the function #getStockQuote and start delegating to calls to
+  //  stockQuoteService provided via newly added constructor of the class.
+  //  You also have a liberty to completely get rid of that function itself, however, make sure
+  //  that you do not delete the #getStockQuote function.
 
 }
