@@ -21,7 +21,9 @@ public class PortfolioManagerFactory {
   }
   public static PortfolioManager getPortfolioManager(String provider,RestTemplate restTemplate) {
     //  restTemplate = new RestTemplate();
-    return  new PortfolioManagerImpl(restTemplate);
+    StockQuotesService stockQuotesService = StockQuoteServiceFactory.INSTANCE
+      .getService(provider,restTemplate);
+    return  new PortfolioManagerImpl(stockQuotesService);
     // return p;//need to change
   }
 

@@ -64,18 +64,19 @@ public class PortfolioManagerImpl implements PortfolioManager {
   public List<Candle> getStockQuote(String symbol, LocalDate from, LocalDate to)
       throws JsonProcessingException {
 
-    String url = buildUri(symbol, from, to);
-    if ( from.compareTo(to) >= 0) {
-          throw new RuntimeException();
-    }
-    RestTemplate rst = new RestTemplate();
-    TiingoCandle[] trades = rst.getForObject(url, TiingoCandle[].class);
-    if (trades != null) {
-      List<Candle> stocks = Arrays.asList(trades);
-        return stocks;
-      } else {
-        return new ArrayList<>();
-    }
+    // String url = buildUri(symbol, from, to);
+    // if ( from.compareTo(to) >= 0) {
+    //       throw new RuntimeException();
+    // }
+    // RestTemplate rst = new RestTemplate();
+    // TiingoCandle[] trades = rst.getForObject(url, TiingoCandle[].class);
+    // if (trades != null) {
+    //   List<Candle> stocks = Arrays.asList(trades);
+    //     return stocks;
+    //   } else {
+    //     return new ArrayList<>();
+    // }
+     return stockQuotesService.getStockQuote(symbol, from, to);
 
       
   }
