@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import com.crio.warmup.stock.dto.AnnualizedReturn;
 import com.crio.warmup.stock.dto.PortfolioTrade;
 import com.crio.warmup.stock.dto.TiingoCandle;
+import com.crio.warmup.stock.dto.PortfolioTrade.TradeType;
 import com.crio.warmup.stock.quotes.StockQuotesService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,6 +15,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -187,6 +189,10 @@ class PortfolioManagerTest {
     PortfolioTrade trade3 = new PortfolioTrade("MSFT", 20, LocalDate.parse("2019-01-02"));
     List<PortfolioTrade> portfolioTrades = Arrays
         .asList(new PortfolioTrade[]{trade1, trade2, trade3});
+    // List<Integer> types = portfolioTrades.stream().map(PortfolioTrade::getQuantity)
+    //     .collect(Collectors.toList());
+    // List<TradeType> types1 = portfolioTrades.stream().map(PortfolioTrade::getTradeType)
+    //     .collect(Collectors.toList());
     if (moduleToRun.equals("ADDITIONAL_REFACTOR")) {
       portfolioManager = new PortfolioManagerImpl(stockQuotesService);
       Mockito.doReturn(getCandles(aaplQuotes))

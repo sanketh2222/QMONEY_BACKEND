@@ -35,71 +35,79 @@ public class AlphavantageService implements StockQuotesService {
   }
 
   @Override
-  public List<Candle> getStockQuote(String symbol, LocalDate from, LocalDate to) throws JsonProcessingException {
+  public List<Candle> getStockQuote(String symbol, LocalDate from, LocalDate to) throws
+   JsonProcessingException, StockQuoteServiceException {
     // TODO Auto-generated method stub
     String url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY"
         +"&symbol="+symbol+"&outputsize=full&apikey=DN6BYSTHCP5EE4HV";
     RestTemplate rst = new RestTemplate();
     // restTemplate = new RestTemplate();
-    String resp = restTemplate.getForObject(url,String.class);
-    ObjectMapper obj = getObjectMapper();
-    Map<LocalDate,AlphavantageCandle> ap1 = obj.readValue(resp, AlphavantageDailyResponse.class).getCandles();
-    AlphavantageDailyResponse ap = rst.getForObject(url, AlphavantageDailyResponse.class);
-    // AlphavantageDailyResponse ap = rst.getForObject(url, AlphavantageDailyResponse.class);
-    // AlphavantageCandle[] ap1 = rst.getForObject(url, AlphavantageCandle[].class);
-    // List<Candle> c = Arrays.asList(ap1);
-    List<Candle> cd = new ArrayList<>();
-    Collection<AlphavantageCandle> ac1 = new ArrayList<>();
-    for (Map.Entry<LocalDate, AlphavantageCandle> mapElement : ap1.entrySet()) { 
-  
-      LocalDate key = mapElement.getKey(); 
-      if ( key.compareTo(from) >= 0 && key.compareTo(to) <= 0) {
-          mapElement.getValue().setDate(key);
-          ac1.add(mapElement.getValue());
-      }
+    try {
 
-      // Finding the value 
-      AlphavantageCandle value = mapElement.getValue(); 
-
-      // print the key : value pair 
-      System.out.println(key + " : " + value); 
-  } 
-    // Collection<AlphavantageCandle> ac = ap.getCandles().values();
     
-    for (AlphavantageCandle a : ac1) {
+      String resp = restTemplate.getForObject(url,String.class);
       
-        cd.add(a);
-    }
+      System.out.println("the response is "+resp);
+      ObjectMapper obj = getObjectMapper();
+      Map<LocalDate,AlphavantageCandle> ap1 = obj.readValue(resp, AlphavantageDailyResponse.class).getCandles();
+      AlphavantageDailyResponse ap = rst.getForObject(url, AlphavantageDailyResponse.class);
+      // AlphavantageDailyResponse ap = rst.getForObject(url, AlphavantageDailyResponse.class);
+      // AlphavantageCandle[] ap1 = rst.getForObject(url, AlphavantageCandle[].class);
+      // List<Candle> c = Arrays.asList(ap1);
+      List<Candle> cd = new ArrayList<>();
+      Collection<AlphavantageCandle> ac1 = new ArrayList<>();
+      for (Map.Entry<LocalDate, AlphavantageCandle> mapElement : ap1.entrySet()) { 
     
-    Collections.reverse(cd);
+        LocalDate key = mapElement.getKey(); 
+        if ( key.compareTo(from) >= 0 && key.compareTo(to) <= 0) {
+            mapElement.getValue().setDate(key);
+            ac1.add(mapElement.getValue());
+        }
+
+        // Finding the value 
+        AlphavantageCandle value = mapElement.getValue(); 
+
+        // print the key : value pair 
+        System.out.println(key + " : " + value); 
+    } 
+      // Collection<AlphavantageCandle> ac = ap.getCandles().values();
+      
+      for (AlphavantageCandle a : ac1) {
+        
+          cd.add(a);
+      }
+      
+      Collections.reverse(cd);
 
 
-    
-    
-    // AlphavantageCandle ap1 = (AlphavantageCandle) ap.getCandles().values();
-    // List<Candle> v = Arrays.asList(ap1);
-    // ap.setCandles(candles);
-    
-    // Map<LocalDate, AlphavantageCandle> c = ap.getCandles();
-    // // List<Candle> f = c.
-    // ap.setCandles(c);
- 
-    // // c4.
-    // // List<AlphavantageCandle> c2 = c.values();
-    // c.values();
-    // // System.out.prsintln(url);
-    // c.keySet();
-    // AlphavantageCandle c2 = c.get(from);
-    // LocalDate date = LocalDate.parse("2020-12-18");
-    // c2.getClose();
-    // c.get(to);
-    // List<Candle> stocks = Arrays.asList(ap);//returns List<Alphavantagedaily response
-    // c.get(LocalDate.parse("2020-12-18"))
-    
-    
-    //need to sort and filter with the start and end date
-    
-    return cd;
+      
+      
+      // AlphavantageCandle ap1 = (AlphavantageCandle) ap.getCandles().values();
+      // List<Candle> v = Arrays.asList(ap1);
+      // ap.setCandles(candles);
+      
+      // Map<LocalDate, AlphavantageCandle> c = ap.getCandles();
+      // // List<Candle> f = c.
+      // ap.setCandles(c);
+  
+      // // c4.
+      // // List<AlphavantageCandle> c2 = c.values();
+      // c.values();
+      // // System.out.prsintln(url);
+      // c.keySet();
+      // AlphavantageCandle c2 = c.get(from);
+      // LocalDate date = LocalDate.parse("2020-12-18");
+      // c2.getClose();
+      // c.get(to);
+      // List<Candle> stocks = Arrays.asList(ap);//returns List<Alphavantagedaily response
+      // c.get(LocalDate.parse("2020-12-18"))
+      
+      
+      //need to sort and filter with the start and end date
+      
+      return cd; } catch(Exception e) {
+        throw new StockQuoteServiceException("exc occured");
+      }
   }
 
   // TODO: CRIO_TASK_MODULE_ADDITIONAL_REFACTOR
@@ -127,7 +135,7 @@ public class AlphavantageService implements StockQuotesService {
   //     be using configurations provided in the {@link @application.properties}.
   //  2. Use this method in #getStockQuote.
 
-  public static void main(String[] args) throws JsonProcessingException {
+  public static void main(String[] args) throws JsonProcessingException, StockQuoteServiceException {
     RestTemplate r = new RestTemplate();
     AlphavantageService al = new AlphavantageService(r);
     al.getStockQuote("AAPL",LocalDate.parse("2020-11-12"),LocalDate.parse("2020-12-12"));

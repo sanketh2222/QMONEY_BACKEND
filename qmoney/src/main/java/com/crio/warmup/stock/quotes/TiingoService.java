@@ -45,7 +45,8 @@ public class TiingoService implements StockQuotesService {
   }
 
   @Override
-  public List<Candle> getStockQuote(String symbol, LocalDate from, LocalDate to) throws JsonProcessingException {
+  public List<Candle> getStockQuote(String symbol, LocalDate from, LocalDate to) throws JsonProcessingException,
+      StockQuoteServiceException {
     // TODO Auto-generated method stub
     String url = buildUri(symbol, from, to);
     if ( from.compareTo(to) >= 0) {
@@ -53,15 +54,19 @@ public class TiingoService implements StockQuotesService {
     }
     // RestTemplate rst = new RestTemplate();
     // TiingoCandle[] trades = rst.getForObject(url, TiingoCandle[].class);
-    String resp = restTemplate.getForObject(url, String.class);
-    ObjectMapper obj = getObjectMapper();
-    TiingoCandle[] trades =  obj.readValue(resp, TiingoCandle[].class);
-    if (trades != null) {
-      List<Candle> stocks = Arrays.asList(trades);
-        return stocks;
-      } else {
-        return new ArrayList<>();
-    }
+    try {
+      String resp = restTemplate.getForObject(url, String.class);
+      ObjectMapper obj = getObjectMapper();
+      TiingoCandle[] trades =  obj.readValue(resp, TiingoCandle[].class);
+    
+      if (trades != null) {
+        List<Candle> stocks = Arrays.asList(trades);
+          return stocks;
+        } else {
+          return new ArrayList<>();
+      } } catch (Exception e) {
+        throw new StockQuoteServiceException("exc ocuured");
+      }
   }
 
 

@@ -9,6 +9,7 @@ import com.crio.warmup.stock.dto.PortfolioTrade;
 import com.crio.warmup.stock.dto.TiingoCandle;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.crio.warmup.stock.quotes.StockQuoteServiceException;
 // import com.fasterxml.jackson.databind.ObjectMapper;
 // import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.crio.warmup.stock.quotes.StockQuoteServiceFactory;
@@ -33,36 +34,32 @@ import org.springframework.web.client.RestTemplate;
 
 public class PortfolioManagerImpl implements PortfolioManager {
 
-
-
-
   private RestTemplate restTemplate;
 
   private StockQuotesService stockQuotesService;
 
-  // Caution: Do not delete or modify the constructor, or else your build will break!
+  // Caution: Do not delete or modify the constructor, or else your build will
+  // break!
   // This is absolutely necessary for backward compatibility
   protected PortfolioManagerImpl(RestTemplate restTemplate) {
     this.restTemplate = restTemplate;
   }
 
-  //added because of the test case issue(PortfolioManagerTest)
-  //why do we need this? method is not being used from factory
+  // added because of the test case issue(PortfolioManagerTest)
+  // why do we need this? method is not being used from factory
   protected PortfolioManagerImpl(StockQuotesService stockQuotesService) {
     this.stockQuotesService = stockQuotesService;
   }
 
-  
+  private static Double dateDiffDays(String start, LocalDate end) {
 
-  private static Double  dateDiffDays(String start,LocalDate end) {
-    
     long diff = ChronoUnit.DAYS.between(LocalDate.parse(start), end);
-    
+
     return Long.valueOf(diff).doubleValue() / 365;
   }
 
   public List<Candle> getStockQuote(String symbol, LocalDate from, LocalDate to)
-      throws JsonProcessingException {
+      throws JsonProcessingException, StockQuoteServiceException {
 
     // String url = buildUri(symbol, from, to);
     // if ( from.compareTo(to) >= 0) {
@@ -104,7 +101,7 @@ public class PortfolioManagerImpl implements PortfolioManager {
 
 
   public List<AnnualizedReturn> calculateAnnualizedReturn(List<PortfolioTrade> trades, 
-      LocalDate endDate) {
+      LocalDate endDate) throws StockQuoteServiceException {
 
 
     if (endDate == null) {
@@ -121,7 +118,8 @@ public class PortfolioManagerImpl implements PortfolioManager {
     return trds;
   } 
 
-  private AnnualizedReturn getAnnualizedReturn(LocalDate endDate, PortfolioTrade trade) {
+  private AnnualizedReturn getAnnualizedReturn(LocalDate endDate, PortfolioTrade trade)
+      throws StockQuoteServiceException {
 
 
     //RestTemplate rest = new RestTemplate(); 
