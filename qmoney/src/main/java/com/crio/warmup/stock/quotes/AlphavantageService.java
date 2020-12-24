@@ -1,6 +1,7 @@
 
 package com.crio.warmup.stock.quotes;
 
+
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.SECONDS;
 
