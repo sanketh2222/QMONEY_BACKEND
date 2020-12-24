@@ -55,6 +55,9 @@ public class AlphavantageService implements StockQuotesService {
       // AlphavantageDailyResponse ap = rst.getForObject(url, AlphavantageDailyResponse.class);
       // AlphavantageCandle[] ap1 = rst.getForObject(url, AlphavantageCandle[].class);
       // List<Candle> c = Arrays.asList(ap1);
+      if (ap1 == null) {
+        throw new StockQuoteServiceException("ex occured");
+      }
       List<Candle> cd = new ArrayList<>();
       Collection<AlphavantageCandle> ac1 = new ArrayList<>();
       for (Map.Entry<LocalDate, AlphavantageCandle> mapElement : ap1.entrySet()) { 
@@ -106,8 +109,10 @@ public class AlphavantageService implements StockQuotesService {
       
       //need to sort and filter with the start and end date
       
-      return cd; } catch(Exception e) {
-        throw new StockQuoteServiceException("exc occured");
+      return cd; } catch(StockQuoteServiceException e) {
+        System.out.println("exception has occured");
+     
+        return null;
       }
   }
 
@@ -136,10 +141,14 @@ public class AlphavantageService implements StockQuotesService {
   //     be using configurations provided in the {@link @application.properties}.
   //  2. Use this method in #getStockQuote.
 
-  public static void main(String[] args) throws JsonProcessingException, StockQuoteServiceException {
+  public static void main(String[] args) throws JsonProcessingException {
     RestTemplate r = new RestTemplate();
     AlphavantageService al = new AlphavantageService(r);
-    al.getStockQuote("AAPL",LocalDate.parse("2020-11-12"),LocalDate.parse("2020-12-12"));
+    try {
+      al.getStockQuote("AAPPL",LocalDate.parse("2020-11-12"),LocalDate.parse("2020-12-12"));
+    } catch(StockQuoteServiceException e) {
+      System.out.println("exc has occured");
+    }
     System.out.println("success");
   }
 
